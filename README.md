@@ -893,8 +893,6 @@ python train_model.py
 
 ## Деплой
 
-### Render.com
-
 Проект настроен для автоматического деплоя на Render.com.
 
 **Конфигурация (render.yaml):**
@@ -928,19 +926,6 @@ services:
 
 ---
 
-## Лицензия
-
-MIT License
-
----
-
 ## Авторы
 
 Проект разработан в рамках хакатона для решения задач финансовой безопасности.
-
----
-
-## Контакты
-
-- GitHub: https://github.com/blvckmage/fraud_detection
-- Датасет: Kaggle - Synthetic Financial Datasets for Fraud Detection
