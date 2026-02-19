@@ -63,7 +63,7 @@ async def startup_event():
 # Модели данных
 class Transaction(BaseModel):
     """Модель данных транзакции"""
-    step: int = Field(..., description="Временной шаг (часы)", ge=1, example=1)
+    step: int = Field(default=1, description="Временной шаг (часы, по умолчанию 1)", ge=1, example=1)
     type: str = Field(..., description="Тип транзакции", example="CASH_OUT")
     amount: float = Field(..., description="Сумма транзакции", ge=0, example=1000.0)
     oldbalanceOrg: float = Field(..., description="Баланс отправителя до", ge=0, example=5000.0)
@@ -295,10 +295,14 @@ async def upload_csv(file: UploadFile = File(...)):
         df = pd.read_csv(io.StringIO(content.decode('utf-8')))
         
         # Проверка колонок
-        required_columns = ['step', 'type', 'amount', 'oldbalanceOrg', 'newbalanceOrig', 'oldbalanceDest', 'newbalanceDest']
+        required_columns = ['type', 'amount', 'oldbalanceOrg', 'newbalanceOrig', 'oldbalanceDest', 'newbalanceDest']
         missing_columns = [col for col in required_columns if col not in df.columns]
         if missing_columns:
             raise HTTPException(status_code=400, detail=f"Missing columns: {missing_columns}")
+        
+        # Если step не указан, устанавливаем по умолчанию
+        if 'step' not in df.columns:
+            df['step'] = 1
         
         # Инженерия признаков
         df['errorBalanceOrig'] = df['newbalanceOrig'] + df['amount'] - df['oldbalanceOrg']
